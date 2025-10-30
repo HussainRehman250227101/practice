@@ -34,11 +34,13 @@
             </h5>
 
             <form class="form" action="#" method="POST">
-              <!-- Textarea -->
+              {%csrf_token%}
               <div class="form__field">
-                <label for="formInput#textarea">Comments: </label>
-                <textarea class="input input--textarea" name="message" id="formInput#textarea"
-                  placeholder="Write your comments here..."></textarea>
+                {%for field in form%}
+                <label for="formInput#textarea">{{field.label}} </label>
+                <br> <br>
+                {{field}}
+                {%endfor%}
               </div>
               <input class="btn btn--sub btn--lg" type="submit" value="Comments" />
             </form>

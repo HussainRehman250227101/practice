@@ -7,7 +7,7 @@ class Project_Form(ModelForm):
         model = Project
         fields = ['title', 'description','image','tag','demo_link','source_link']
         widgets = {
-            'tags': forms.CheckboxSelectMultiple()
+            'tag': forms.CheckboxSelectMultiple()
         }
         labels = {
             'title': 'Title',
@@ -18,6 +18,19 @@ class Project_Form(ModelForm):
             'source_link': 'Source link'
         } 
     def __init__(self,*args,**kwargs):
-        super(self).__init__(*args,**kwargs)
+        super(Project_Form,self).__init__(*args,**kwargs)
         for value in self.fields.values():
             value.widget.attrs.update({'class':'input input--text'})
+
+class Review_Form(ModelForm):
+    class Meta:
+        model = Review
+        fields = ['value','body']
+        labels = {
+            'value': 'Place your vote',
+            'body': 'Post a review'
+        }
+    def __init__(self,*args,**kwargs):
+        super(Review_Form,self).__init__(*args,**kwargs)
+        for value in self.fields.values():
+            value.widget.attrs.update({'class':'input input--text','style':'margin-top:10px;margin-bottom:10px;'})
