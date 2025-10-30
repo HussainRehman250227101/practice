@@ -23,3 +23,34 @@ def single_project(request,pk):
     return render(request, 'projects/single_project.html', context)
 
 
+# ADD PROJECT
+def add_project(request):
+    profile = request.user.profile
+    form = Project_Form
+    if request.method =='POST':
+        form = Project_Form(request.POST,request.FILES)
+        if form.is_valid():
+            form_save = form.save(commit=False)
+            form_save.owner = profile 
+            form_save.save()
+            form.save_m2m()
+            return redirect('all_projects')
+    context = {'form':form}
+    return render(request, 'projects/add_project.html',context)
+
+
+# EDIT PROJECT
+def edit_project(request,pk):
+    profile = request.user.profile
+    project = Project.objects.get(id=pk)
+    form = Project_Form(instance=project)
+    if request.method =='POST':
+        form = Project_Form(request.POST,request.FILES,instance=project)
+        if form.is_valid():
+            form_save = form.save(commit=False)
+            form_save.owner = profile 
+            form_save.save()
+            form.save_m2m()
+            return redirect('single_project',pk=project.id )
+    context={'form':form}
+    return render(request,'projects/edit_project.html',context)
