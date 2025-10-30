@@ -26,6 +26,7 @@
     <!-- Search Result: DevList -->
     <section class="projectsList">
       <div class="container">
+
         <div class="grid grid--three">
 
 
@@ -33,7 +34,7 @@
 
           <div class="column">
             <div class="card project">
-              <a href="single-project.html" class="project">
+              <a href="{% url 'single_project' project.id %}" class="project">
                 <img class="project__thumbnail" src="{{project.image.url}}" alt="project thumbnail" />
                 <div class="card__body">
                   <h3 class="project__title">{{project.title}}</h3>

@@ -8,3 +8,7 @@ def all_projects(request):
     context = {'projects' : projects}
     return render(request, 'projects/all_projects.html',context) 
 
+def single_project(request,pk):
+    project = Project.objects.get(id=pk)
+    context = {'project': project}
+    return render(request, 'projects/single_project.html', context)
