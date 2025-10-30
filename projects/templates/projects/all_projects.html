@@ -45,7 +45,7 @@
                   </p>
 
                   <div class="project__tags">
-                      {% for tag in project.tag.all%}
+                      {% for tag in project.tag.all|slice:4%}
                     <span class="tag tag--pill tag--main">
                       <small>{{tag}}</small>
                     </span>
