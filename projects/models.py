@@ -14,7 +14,7 @@ class Project(models.Model):
     # owner
     title = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    image = models.ImageField(default='images/default.jpg')
+    image = models.ImageField(default='images/default.jpg', upload_to='images/')
     tag = models.ManyToManyField(Tag, null=True, blank=True)
     vote_ratio = models.IntegerField(default=0, null=True, blank=True) 
     vote_total = models.IntegerField(default=0, null=True, blank=True) 
