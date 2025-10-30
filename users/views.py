@@ -27,7 +27,40 @@ def add_skill(request):
             form_save = form.save(commit=False)
             form_save.owner = profile 
             form_save.save()
-            # form.save_m2m()
+            form.save_m2m()
             return redirect('single_user', pk= profile.id)
     context={'form': form}
-    return render(request,'users/add_skill.html',context)
+    return render(request,'users/add_skill.html',context) 
+
+# EDIT SKILL
+def edit_skill(request,pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    form = Skill_Form(instance=skill)
+    if request.method=='POST':
+        form = Skill_Form(request.POST,instance=skill)
+        if form.is_valid():
+            form.save()
+            return redirect('account',pk=profile.id)
+    context={'form':form}
+    return render(request, 'users/add_skill.html', context)
+
+
+# DELETE SKILL 
+def delete_skill(request,pk):
+    profile = request.user.profile 
+    skill = profile.skill_set.get(id=pk)
+    if request.method=='POST':
+        skill.delete()
+        return redirect('account',pk=profile.id)
+    context = {'object':skill}
+    return render(request,'delete.html',context)
+
+# ACCOUNT
+def account(request,pk):
+    profile = request.user.profile 
+    projects = profile.project_set.all()
+    core_skills = profile.skill_set.exclude(description='')
+    other_skills = profile.skill_set.filter(description='')
+    context = {'profile':profile,'core_skills':core_skills,'other_skills':other_skills,'projects':projects}
+    return render(request, 'users/account.html',context)
