@@ -12,7 +12,7 @@ def all_projects(request):
 # SINGLE PROJECT
 def single_project(request,pk):
     project = Project.objects.get(id=pk)
-    form = Review_Form
+    form = Review_Form()
     if request.method == 'POST':
         form = Review_Form(request.POST)
         review = form.save(commit=False)
@@ -26,7 +26,7 @@ def single_project(request,pk):
 # ADD PROJECT
 def add_project(request):
     profile = request.user.profile
-    form = Project_Form
+    form = Project_Form()
     if request.method =='POST':
         form = Project_Form(request.POST,request.FILES)
         if form.is_valid():
