@@ -1,5 +1,6 @@
 from django.db import models
 import uuid 
+from users.models import Profile,Skill
 
 class Tag(models.Model):
     name = models.CharField(max_length=200)
@@ -11,7 +12,7 @@ class Tag(models.Model):
 
 
 class Project(models.Model):
-    # owner
+    owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     image = models.ImageField(default='images/default.jpg', upload_to='images/')

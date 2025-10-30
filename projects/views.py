@@ -8,6 +8,8 @@ def all_projects(request):
     context = {'projects' : projects}
     return render(request, 'projects/all_projects.html',context) 
 
+
+# SINGLE PROJECT
 def single_project(request,pk):
     project = Project.objects.get(id=pk)
     form = Review_Form
@@ -19,3 +21,5 @@ def single_project(request,pk):
         return redirect('single_project', pk= project.id)
     context = {'project': project,'form':form}
     return render(request, 'projects/single_project.html', context)
+
+
