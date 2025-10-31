@@ -9,6 +9,7 @@
         {% for message in unread %}
         <li class="message message--unread">
           <a href="{% url 'single_message_receive' message.id %}">
+            
             <span class="message__author">{{message.sender}}</span>
             <span class="message__subject">{{message.subject}}</span>
             <span class="message__date">{{message.created}}</span>
@@ -20,6 +21,7 @@
         {% for message in read %}
         <li class="message">
           <a href="{% url 'single_message_receive' message.id %}">
+            
             <span class="message__author">{{message.sender}}</span>
             <span class="message__subject">{{message.subject}}</span>
             <span class="message__date">{{message.created}}</span>
@@ -32,11 +34,12 @@
         {% endif %}
       </ul> </br></br>
 
-      <h3 class="inbox__title">Sent Messages(<span>{{sent_count}}</span>)</h3>
+      <h3 class="inbox__title">Sent Messages(<span>{{sent_count}}</span>)</h3> 
       <ul class="messages">
         {% if sent_msg %}
         {% for message in sent_msg %}
         <li class="message">
+          
           <a href="{% url 'single_message_sent' message.id %}">
             <span class="message__author">{{message.receiver}}</span>
             <span class="message__subject">{{message.subject}}</span>
