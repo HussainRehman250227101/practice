@@ -1,0 +1,33 @@
+{% extends 'main.html' %} 
+
+{%block content%}
+
+  <main class="formPage my-xl">
+        <div class="content-box">
+            <div class="formWrapper">
+                <a class="backButton" href="{% url 'all_projects' %}">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </a>
+                <br>
+
+                <form class="form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token%}
+                    
+                    {% for field in form %}
+                    <div class="form__field">
+                        <label for="formInput#text">{{field.label}}</label>
+                        {{field}}
+                        {% for error in field.errors %}
+                        <small style="color: red;">{{error}}</small>
+                        {%endfor%}
+                    </div>
+                    {%endfor%}
+                    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+                    <a class="btn btn--sub btn--lg  my-md" href="{% url 'delete_profile' profile.id %}" >Delete</a> 
+                    
+                </form>
+            </div>
+        </div>
+    </main>
+
+{%endblock content%}

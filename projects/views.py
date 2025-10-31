@@ -51,6 +51,16 @@ def edit_project(request,pk):
             form_save.owner = profile 
             form_save.save()
             form.save_m2m()
-            return redirect('single_project',pk=project.id )
+            return redirect('account', pk = profile.id)
     context={'form':form}
-    return render(request,'projects/edit_project.html',context)
+    return render(request,'projects/edit_project.html',context) 
+
+# DELETE PROJECT
+def delete_project(request,pk):
+    profile = request.user.profile 
+    project = profile.project_set.get(id=pk)
+    if request.method =='POST':
+        project.delete()
+        return redirect('account', pk = profile.id)
+    context = {'object':project}
+    return render(request,'delete.html',context)

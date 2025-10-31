@@ -64,3 +64,28 @@ def account(request,pk):
     other_skills = profile.skill_set.filter(description='')
     context = {'profile':profile,'core_skills':core_skills,'other_skills':other_skills,'projects':projects}
     return render(request, 'users/account.html',context)
+
+# EDIT PROFILE
+def edit_profile(request,pk):
+    profile = request.user.profile 
+    form = Profile_Form(instance=profile)
+    if request.method == 'POST':
+        form = Profile_Form(request.POST,request.FILES,instance=profile)
+        if form.is_valid():
+            form_save = form.save(commit=False)
+            form_save.user = request.user 
+            form_save.save()
+            return redirect('account', pk=profile.id)
+
+
+    context= {'form':form,'profile':profile}
+    return render(request,'users/edit_profile.html',context) 
+
+# DELETE PROFILE 
+def delete_profile(request,pk):
+    profile = request.user.profile
+    if request.method=='POST':
+        profile.delete()
+        return redirect('all_projects')
+    context = {'object':profile}
+    return render(request,'delete.html',context)

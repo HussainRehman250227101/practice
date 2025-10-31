@@ -17,7 +17,7 @@ class Profile_Form(ModelForm):
             'username': 'Username',
         }
     
-    def __inti__(self,*args,**kwargs):
+    def __init__(self,*args,**kwargs):
         super(Profile_Form,self).__init__(*args,**kwargs)
         for key,value in self.fields.items():
             value.widget.attrs.update({'class':'input input--text'}) 

@@ -7,5 +7,7 @@ urlpatterns = [
     path('edit_skill/<str:pk>/',views.edit_skill, name='edit_skill'),
     path('delete_skill/<str:pk>/',views.delete_skill, name='delete_skill'),
     path('account/<str:pk>/',views.account, name='account'),
+    path('edit_profile/<str:pk>/',views.edit_profile, name='edit_profile'),
+    path('delete_profile/<str:pk>/',views.delete_profile, name='delete_profile'),
     
 ]
