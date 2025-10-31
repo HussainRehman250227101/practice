@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
+from django.contrib.auth import login,logout,authenticate
+from django.contrib.auth.models import User
 from .models import Profile
-from .forms import Profile_Form, Skill_Form
+from .forms import Profile_Form, Skill_Form,customuserform
 
 # ALL USERS
 def all_users(request):
@@ -86,6 +88,50 @@ def delete_profile(request,pk):
     profile = request.user.profile
     if request.method=='POST':
         profile.delete()
+        profile.user.delete()
         return redirect('all_projects')
     context = {'object':profile}
-    return render(request,'delete.html',context)
+    return render(request,'delete.html',context) 
+
+# REGISTER
+def register(request):
+    page = 'register'
+    form = customuserform()
+    if request.method =='POST':
+        form = customuserform(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request,user)
+            return redirect('edit_profile',pk = user.profile.id)
+    else:
+        print("an error occured")
+    context = {'form':form,'page':page}
+    return render (request,'users/login_signup.html',context) 
+
+# LOGIN
+def login_view(request):
+    page = 'login'
+    context={'page':page}
+
+    if request.user.is_authenticated:
+        return redirect('account',pk=request.user.profile.id)
+    
+    if request.method =='POST':
+        username = request.POST['username'].lower()
+        password = request.POST['password']
+        try:
+            user = User.objects.get(username = username)
+        except:
+            print("no username exists")
+        user = authenticate(request,username=username,password= password)
+        if user is not None:
+            login(request,user)
+            return redirect('all_projects')
+    return render(request,'users/login_signup.html',context) 
+
+def logout_view(request):
+    user = request.user 
+    logout(request)
+    return redirect('login')
