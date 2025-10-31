@@ -2,8 +2,8 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Profile
-from .forms import Profile_Form, Skill_Form,customuserform
+from .models import Profile,Skill,Message
+from .forms import Profile_Form, Skill_Form,customuserform,Message_Form
 
 # ALL USERS
 def all_users(request):
@@ -141,7 +141,78 @@ def login_view(request):
             messages.error(request,"username or password is wrong")
     return render(request,'users/login_signup.html',context) 
 
+
+# LOGOUT
 def logout_view(request):
     logout(request)
     messages.success(request,'logged out')
     return redirect('login')
+
+# MESSAGES 
+def user_inbox(request):
+    profile = request.user.profile 
+    all_received_messages = profile.receiver.all()
+    all_sent_messages = profile.sender.all() 
+    sent_count =  all_sent_messages.count()
+    unread = all_received_messages.filter(is_read = False)
+    read = all_received_messages.filter(is_read = True)
+    unread_count =unread.count() 
+    context = {'read':read, 'unread': unread,'unread_count':unread_count,'sent_msg':all_sent_messages,'sent_count':sent_count} 
+    return render(request,'users/inbox.html',context)
+
+# SINGLE MESSAGE
+def single_message_receive(request,pk):
+    profile = request.user.profile 
+    message = profile.receiver.get(id=pk)
+    if message.is_read == False:
+        message.is_read = True
+        message.save()
+    context={'message':message}
+    return render(request,'users/message.html',context) 
+
+def single_message_sent(request,pk):
+    profile = request.user.profile 
+    message = profile.sender.get(id=pk)
+
+    context={'message':message}
+    return render(request,'users/message.html',context) 
+
+# SEND MESSAGE
+def send_message(request,pk):
+    profile = Profile.objects.get(id=pk)
+    form = Message_Form()
+    if request.method =='POST':
+        form = Message_Form(request.POST)
+        if form.is_valid():
+            message_saving  = form.save(commit=False)
+            message_saving.sender = request.user.profile 
+            message_saving.receiver = profile 
+            message_saving.save()
+            return redirect('account',pk=request.user.profile.id)
+
+    context = {'form':form}
+    return render(request, 'users/send_message_form.html',context) 
+
+# MESSAGE REPLY 
+def reply_message(request,pk):
+    profile = Profile.objects.get(id=pk)
+    form = Message_Form()
+    if request.method =='POST':
+        form = Message_Form(request.POST)
+        if form.is_valid():
+            message_saving  = form.save(commit=False)
+            message_saving.sender = request.user.profile 
+            message_saving.receiver = profile 
+            message_saving.save()
+            return redirect('account',pk=request.user.profile.id)
+    context={'form':form}
+    return render(request,'users/send_message_form.html',context) 
+
+# DELETE MESSAGE 
+def delete_message(request,pk):
+    del_message = Message.objects.get(id=pk) 
+    if request.method =='POST':
+        del_message.delete()
+        return redirect('inbox')
+    context={'object':del_message.subject}
+    return render(request,'delete.html',context)

@@ -12,5 +12,11 @@ urlpatterns = [
     path('register/',views.register, name='register'),
     path('login/',views.login_view, name='login'),
     path('logout/',views.logout_view, name='logout'),
-    
+    path('logout/',views.logout_view, name='logout'),
+    path('inbox/',views.user_inbox,name='inbox'),
+    path('send_message/<str:pk>/',views.send_message,name='send_message'),
+    path('single_message/<str:pk>/',views.single_message_receive,name='single_message_receive'),
+    path('single_message_sent/<str:pk>/',views.single_message_sent,name='single_message_sent'),
+    path('reply_message/<str:pk>/',views.reply_message,name='reply_message'),
+    path('delete_message/<str:pk>/',views.delete_message,name='delete_message'),
 ]

@@ -39,3 +39,17 @@ class Skill(models.Model):
     def __str__(self):
         return str(self.skill_name)
     
+class Message(models.Model):
+    sender = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True , related_name='sender') 
+    receiver = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True , related_name='receiver') 
+    subject = models.CharField(max_length=200)
+    is_read = models.BooleanField(default=False)
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+
+    def __str__(self):
+        return str(self.sender)
+
+    class Meta:
+        ordering =['is_read', '-created']

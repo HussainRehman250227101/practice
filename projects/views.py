@@ -81,3 +81,4 @@ def delete_project(request,pk):
         messages.error(request,'An error occured,try again')
     context = {'object':project}
     return render(request,'delete.html',context)
+ 

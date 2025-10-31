@@ -1,0 +1,29 @@
+
+{% extends 'main.html' %}
+
+{% block content %}
+ 
+  <main class="messagePage my-xl">
+    <div class="content-box">
+      <div class="message">
+        <a class="backButton" href="inbox.html"><i class="im im-angle-left"></i></a>
+        <h2 class="message__subject">{{message.subject}}</h4>
+          <a href="{% url 'single_user' message.sender.id %}" class="message__author">{{message.sender}}</a>
+          <p class="message__date">{{message.created}}</p>
+          <div class="message__body">{{message.body}}</div>
+          
+          {% if request.user.profile != message.sender %}
+          <div style="display: inline-block;">
+            <a class="btn btn--sub btn--lg  my-md" href="{% url 'reply_message' message.sender.id %}" >Reply</a>
+          </div>
+          {% endif %}
+          <div style="display: inline-block;">
+            <a class="btn btn--sub btn--lg  my-md" href="{% url 'delete_message' message.id %}" >Delete</a>
+          </div>
+          
+          
+          
+      </div>
+    </div>
+  </main>
+{% endblock content %}
