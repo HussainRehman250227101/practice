@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout,authenticate
+from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile
 from .forms import Profile_Form, Skill_Form,customuserform
@@ -30,6 +31,7 @@ def add_skill(request):
             form_save.owner = profile 
             form_save.save()
             form.save_m2m()
+            messages.success(request,'skill added successfully')
             return redirect('single_user', pk= profile.id)
     context={'form': form}
     return render(request,'users/add_skill.html',context) 
@@ -43,6 +45,7 @@ def edit_skill(request,pk):
         form = Skill_Form(request.POST,instance=skill)
         if form.is_valid():
             form.save()
+            messages.success(request,'skill updated successfully')
             return redirect('account',pk=profile.id)
     context={'form':form}
     return render(request, 'users/add_skill.html', context)
@@ -54,6 +57,7 @@ def delete_skill(request,pk):
     skill = profile.skill_set.get(id=pk)
     if request.method=='POST':
         skill.delete()
+        messages.success(request,'skill deleted successfully')
         return redirect('account',pk=profile.id)
     context = {'object':skill}
     return render(request,'delete.html',context)
@@ -77,6 +81,7 @@ def edit_profile(request,pk):
             form_save = form.save(commit=False)
             form_save.user = request.user 
             form_save.save()
+            messages.success(request,'Profile updated successfully')
             return redirect('account', pk=profile.id)
 
 
@@ -89,6 +94,7 @@ def delete_profile(request,pk):
     if request.method=='POST':
         profile.delete()
         profile.user.delete()
+        messages.success(request,'Profile deleted successfully')
         return redirect('all_projects')
     context = {'object':profile}
     return render(request,'delete.html',context) 
@@ -104,6 +110,7 @@ def register(request):
             user.username = user.username.lower()
             user.save()
             login(request,user)
+            messages.success(request,'Profile created successfully')
             return redirect('edit_profile',pk = user.profile.id)
     else:
         print("an error occured")
@@ -124,14 +131,17 @@ def login_view(request):
         try:
             user = User.objects.get(username = username)
         except:
-            print("no username exists")
+            messages.error(request,"user doesn't exist")
         user = authenticate(request,username=username,password= password)
         if user is not None:
             login(request,user)
+            messages.success(request,'logged in successfully')
             return redirect('all_projects')
+        else:
+            messages.error(request,"username or password is wrong")
     return render(request,'users/login_signup.html',context) 
 
 def logout_view(request):
-    user = request.user 
     logout(request)
+    messages.success(request,'logged out')
     return redirect('login')

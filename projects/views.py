@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.contrib import messages
 from .forms import Project_Form,Review_Form
 from .models import Project,Tag,Review
 
@@ -15,10 +16,14 @@ def single_project(request,pk):
     form = Review_Form()
     if request.method == 'POST':
         form = Review_Form(request.POST)
-        review = form.save(commit=False)
-        review.project = project
-        review.save()
-        return redirect('single_project', pk= project.id)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.project = project
+            review.save()
+            messages.success(request,'Review added successfully')
+            return redirect('single_project', pk= project.id)
+        else:
+            messages.error(request,'An error occured,try again')
     context = {'project': project,'form':form}
     return render(request, 'projects/single_project.html', context)
 
@@ -34,7 +39,10 @@ def add_project(request):
             form_save.owner = profile 
             form_save.save()
             form.save_m2m()
+            messages.success(request,'Project added successfully')
             return redirect('all_projects')
+        else:
+            messages.error(request,'An error occured,try again')
     context = {'form':form}
     return render(request, 'projects/add_project.html',context)
 
@@ -51,7 +59,10 @@ def edit_project(request,pk):
             form_save.owner = profile 
             form_save.save()
             form.save_m2m()
+            messages.success(request,'Project updated successfully')
             return redirect('account', pk = profile.id)
+        else:
+            messages.error(request,'An error occured,try again')
     context={'form':form}
     return render(request,'projects/edit_project.html',context) 
 
@@ -61,6 +72,9 @@ def delete_project(request,pk):
     project = profile.project_set.get(id=pk)
     if request.method =='POST':
         project.delete()
+        messages.success(request,'Project deleted successfully')
         return redirect('account', pk = profile.id)
+    else:
+        messages.error(request,'An error occured,try again')
     context = {'object':project}
     return render(request,'delete.html',context)
