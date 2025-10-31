@@ -30,10 +30,15 @@
           <div class="comments">
             <h3 class="singleProject__subtitle">Feedback</h3>
             <h5 class="project--rating">
-              36% Postitive Feedback (18 Votes)
+              {{project.vote_ratio}}% Postitive Feedback ({{project.vote_total}} Vote{{project.vote_total|pluralize:'s'}})
             </h5>
 
-            <form class="form" action="#" method="POST">
+            {% if request.user.profile.id in all_id %}
+            <p style="color: red;">You can't add another review</p>
+            {% elif request.user.profile == project.owner %} 
+            <p style="color: red;">You can't review your own work</p>
+            {% else %}
+            <form class="form" action="" method="POST">
               {%csrf_token%}
               <div class="form__field">
                 {%for field in form%}
@@ -44,17 +49,17 @@
               </div>
               <input class="btn btn--sub btn--lg" type="submit" value="Comments" />
             </form>
-
+            {% endif %}
             <div class="commentList">
                 {%for review in project.review_set.all%}
                 {% if review.body %}
               <div class="comment">
-                <a href="profile.html">
+                <a href="{% url 'single_user' review.owner.id %}">
                   <img class="avatar avatar--md"
-                    src="{{project.owner.profile_image.url}}" alt="user" />
+                    src="{{review.owner.profile_image.url}}" alt="user" />
                 </a>
                 <div class="comment__details">
-                  <a href="{% url 'single_user' project.owner.id %}" class="comment__author">{{project.owner.name}}</a>
+                  <a href="{% url 'single_user' review.owner.id %}" class="comment__author">{{review.owner.name}}</a>
                   <p class="comment__info">{{review.body}}</p>
                 </div>
               </div>

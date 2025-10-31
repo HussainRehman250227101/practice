@@ -12,19 +12,22 @@ def all_projects(request):
 
 # SINGLE PROJECT
 def single_project(request,pk):
-    project = Project.objects.get(id=pk)
+    project = Project.objects.get(id=pk) 
     form = Review_Form()
     if request.method == 'POST':
         form = Review_Form(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            review.project = project
+            review.project = project 
+            review.owner = request.user.profile
             review.save()
+            project.review_count
+            project.reviewers_ids
             messages.success(request,'Review added successfully')
             return redirect('single_project', pk= project.id)
         else:
             messages.error(request,'An error occured,try again')
-    context = {'project': project,'form':form}
+    context = {'project': project,'form':form,'all_id':project.reviewers_ids}
     return render(request, 'projects/single_project.html', context)
 
 

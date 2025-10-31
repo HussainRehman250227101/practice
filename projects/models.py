@@ -27,9 +27,23 @@ class Project(models.Model):
     def __str__(self):
         return str(self.title) 
     
+    @property
+    def review_count(self):
+        review_total = self.review_set.all()
+        total_votes = review_total.count()
+        up_votes = review_total.filter(value = 'up').count() 
+        if total_votes:
+            ratio = (up_votes/total_votes)*100 
+            self.vote_ratio = ratio 
+            self.vote_total = total_votes 
+            self.save()
 
+    @property
+    def reviewers_ids(self):
+        reviewers = self.review_set.all().values_list('owner__id', flat=True)
+        return reviewers
 class Review(models.Model):
-    # owner
+    owner = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True )
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     votes = [('up', 'up vote'),('down', 'down vote')]
     value = models.CharField(max_length=200, choices=votes)

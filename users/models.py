@@ -27,6 +27,8 @@ class Profile(models.Model):
     class Meta:
         ordering=['-created']
         
+    
+
 class Skill(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     skill_name= models.CharField(max_length=200, null=True , blank=True)
