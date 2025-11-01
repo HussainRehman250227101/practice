@@ -12,7 +12,6 @@ urlpatterns = [
     path('register/',views.register, name='register'),
     path('login/',views.login_view, name='login'),
     path('logout/',views.logout_view, name='logout'),
-    path('logout/',views.logout_view, name='logout'),
     path('inbox/',views.user_inbox,name='inbox'),
     path('send_message/<str:pk>/',views.send_message,name='send_message'),
     path('single_message/<str:pk>/',views.single_message_receive,name='single_message_receive'),
