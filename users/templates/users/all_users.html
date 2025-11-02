@@ -13,11 +13,11 @@
         </div>
 
         <div class="hero-section__search">
-          <form class="form" action="#" method="get">
+          <form class="form" action="{% url 'all_users' %}" method="get">
             <div class="form__field">
               <label for="formInput#search">Search Developers </label>
-              <input class="input input--text" id="formInput#search" type="text" name="text"
-                placeholder="Search by developer name" />
+              <input class="input input--text" id="formInput#search" type="text" value="{{search_query}}"  name="search_query"
+                placeholder="Search by name, intro or skill" />
             </div>
 
             <input class="btn btn--sub btn--lg" type="submit" value="Search" />
@@ -29,7 +29,7 @@
     <section class="devlist">
       <div class="container">
         <div class="grid grid--three">
-
+            {% if profiles %}
             {%for profile in profiles%}
 
           <div class="column card">
@@ -56,7 +56,9 @@
             </div>
           </div>
          {%endfor%}
-  
+          {% else %}
+          <h3 style="color: red; margin-bottom: 80px;">No Profiles found</h3>
+          {% endif%}
         </div>
       </div>
     </section>

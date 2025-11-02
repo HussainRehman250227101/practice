@@ -1,14 +1,16 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout,authenticate
+from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Profile,Skill,Message
-from .forms import Profile_Form, Skill_Form,customuserform,Message_Form
+from .models import Profile,Message
+from .forms import Profile_Form, Skill_Form,customuserform,Message_Form 
+from .utils import search_profiles
 
 # ALL USERS
 def all_users(request):
-    profiles = Profile.objects.all()
-    context ={'profiles':profiles}
+    profiles, search_query = search_profiles(request)
+    context ={'profiles':profiles,'search_query':search_query}
     return render(request,'users/all_users.html',context)
 
 
