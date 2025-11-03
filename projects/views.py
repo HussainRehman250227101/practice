@@ -1,14 +1,14 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from .forms import Project_Form,Review_Form
-from.utils import search_projects
+from.utils import search_projects,paginate_projects
 from .models import Project 
 
 # ALL PROJECTS
 def all_projects(request):
     projects , search_query = search_projects(request)
-    
-    context = {'projects' : projects,'search_query':search_query}
+    projects,custom_range = paginate_projects(request,projects,3)
+    context = {'projects' : projects,'search_query':search_query,'custom_range':custom_range}
     return render(request, 'projects/all_projects.html',context) 
 
 

@@ -5,12 +5,14 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile,Message
 from .forms import Profile_Form, Skill_Form,customuserform,Message_Form 
-from .utils import search_profiles
+from .utils import search_profiles,paginate_profile
 
 # ALL USERS
 def all_users(request):
     profiles, search_query = search_profiles(request)
-    context ={'profiles':profiles,'search_query':search_query}
+    profiles,custom_range = paginate_profile(request,profiles,3)
+    
+    context ={'profiles':profiles,'search_query':search_query,'custom_range':custom_range}
     return render(request,'users/all_users.html',context)
 
 
